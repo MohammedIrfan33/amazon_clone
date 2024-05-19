@@ -46,5 +46,17 @@ class UserModel {
 
   String toJson() => json.encode(toMap());
 
-  factory UserModel.fromJson(String source) => UserModel.fromMap(json.decode(source) as Map<String, dynamic>);
+
+   factory UserModel.fromJson(Map<String, dynamic> json) {
+    return UserModel(
+      uaerId: json['_id'],
+      email: json['email'],
+      password: json['password'],
+      address: json['address'],
+      type: json['type'],
+      token: json['token'],
+      name: json['name'],
+    );
+  }
+
 }

@@ -42,7 +42,6 @@ class AuthService {
             });
       }
     } catch (e) {
-      print(e);
       if (context.mounted) {
         showSnackBar(context: context, text: e.toString());
       }
@@ -73,8 +72,6 @@ class AuthService {
           response: res,
           context: context,
           onSuccess: () async {
-            print(res.body);
-
             SharedPreferences prefs = await SharedPreferences.getInstance();
 
             if (context.mounted) {
@@ -90,14 +87,59 @@ class AuthService {
                 (route) => false,
               );
             }
-
-            print('login success');
           },
         );
       }
     } catch (e) {
       if (context.mounted) {
         showSnackBar(context: context, text: e.toString());
+      }
+    }
+  }
+
+  //get user data
+  void getUserData({required BuildContext context}) async {
+    var userProvider = Provider.of<UserProvider>(context, listen: false);
+
+    try {
+      SharedPreferences pref = await SharedPreferences.getInstance();
+
+      userProvider.setLoading(true);
+
+      String? token = pref.getString('x-auth-token');
+
+      if (token == null) {
+        pref.setString('x-auth-token', '');
+      }
+
+      http.Response authVerifyRes = await http.post(
+          Uri.parse('$baseUrl/api/varifyToken'),
+          headers: <String, String>{
+            'Content-Type': 'application/json',
+            'x-auth-token': ''
+          });
+
+      if (jsonDecode(authVerifyRes.body) == true) {
+        //get user
+        http.Response response = await http
+            .get(Uri.parse('$baseUrl/api/getUser'), headers: <String, String>{
+          'Content-Type': 'application/json',
+          'x-auth-token': token!
+        });
+
+        if (context.mounted) {
+          userProvider.setUser(response.body);
+
+          userProvider.setLoading(false);
+        }
+      } else {
+        userProvider.setLoading(false);
+      }
+    } catch (e) {
+      userProvider.setLoading(false);
+      if (context.mounted) {
+        showSnackBar(context: context, text: e.toString());
+        userProvider.setLoading(false);
       }
     }
   }
