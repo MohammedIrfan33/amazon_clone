@@ -90,9 +90,7 @@ authRoute.post("/api/varifyToken", async (req, res) => {
     if (!token) return res.json(false);
 
     const verified = jwt.verify(token, "qwertyuiop");
-
     const user = await userModel.findById(verified.userId);
-
     if (!user) return res.json(false);
 
     res.json(true);

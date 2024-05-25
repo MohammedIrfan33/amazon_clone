@@ -1,5 +1,6 @@
 import 'dart:async';
 
+import 'package:amazon_clone/common/widgets/bottom_bar.dart';
 import 'package:amazon_clone/constants/globel_variables.dart';
 import 'package:amazon_clone/features/auth/screen/auth_screen.dart';
 import 'package:amazon_clone/features/auth/services/auth_service.dart';
@@ -38,6 +39,7 @@ class _MyAppState extends State<MyApp> {
   List<ConnectivityResult> _connectionStatus = [ConnectivityResult.none];
   final Connectivity _connectivity = Connectivity();
   late StreamSubscription<List<ConnectivityResult>> _connectivitySubscription;
+   final _messangerKey = GlobalKey<ScaffoldMessengerState>();
 
   @override
   void initState() {
@@ -47,7 +49,7 @@ class _MyAppState extends State<MyApp> {
         _connectivity.onConnectivityChanged.listen(_updateConnectionStatus);
 
     WidgetsBinding.instance.addPostFrameCallback((_) {
-      _authService.getUserData(context: context);
+      _authService.getUserData(context: context ,key: _messangerKey);
     });
 
     super.initState();
@@ -79,6 +81,7 @@ class _MyAppState extends State<MyApp> {
   Widget build(BuildContext context) {
     return MaterialApp(
         title: 'Flutter Demo',
+        scaffoldMessengerKey: _messangerKey,
         onGenerateRoute: (settings) => generateRoute(settings),
         theme: ThemeData(
           scaffoldBackgroundColor: GlobalVariables.backgroundColor,
@@ -116,7 +119,7 @@ class _MyAppState extends State<MyApp> {
       if (userProvider.user.token.isEmpty) {
         return const AuthScreen();
       } else {
-        return const HomeScreen();
+        return const BottomBar();
       }
     }
   }

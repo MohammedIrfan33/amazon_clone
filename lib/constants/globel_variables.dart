@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 
 
 
-const baseUrl = 'https://6366-2409-4073-4d0c-e344-c95c-ca86-78f8-be0.ngrok-free.app';
+const baseUrl = 'https://68e0-117-201-205-5.ngrok-free.app';
 class GlobalVariables {
   // COLORS
   static const appBarGradient = LinearGradient(

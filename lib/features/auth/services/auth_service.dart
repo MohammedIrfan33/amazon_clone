@@ -1,4 +1,5 @@
 import 'dart:convert';
+import 'package:amazon_clone/common/widgets/bottom_bar.dart';
 import 'package:amazon_clone/constants/error_handle.dart';
 import 'package:amazon_clone/constants/globel_variables.dart';
 import 'package:amazon_clone/constants/utils.dart';
@@ -6,6 +7,7 @@ import 'package:amazon_clone/features/home/screens/home_screen.dart';
 import 'package:amazon_clone/models/user_model.dart';
 import 'package:amazon_clone/provider/user_provider.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/widgets.dart';
 import 'package:http/http.dart' as http;
 import 'package:provider/provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
@@ -83,7 +85,7 @@ class AuthService {
             if (context.mounted) {
               Navigator.pushNamedAndRemoveUntil(
                 context,
-                HomeScreen.routeName,
+                BottomBar.routeName,
                 (route) => false,
               );
             }
@@ -98,7 +100,9 @@ class AuthService {
   }
 
   //get user data
-  void getUserData({required BuildContext context}) async {
+  void getUserData({required BuildContext context,required GlobalKey<ScaffoldMessengerState> key}) async {
+
+  
     var userProvider = Provider.of<UserProvider>(context, listen: false);
 
     try {
@@ -116,7 +120,7 @@ class AuthService {
           Uri.parse('$baseUrl/api/varifyToken'),
           headers: <String, String>{
             'Content-Type': 'application/json',
-            'x-auth-token': ''
+            'x-auth-token': token!
           });
 
       if (jsonDecode(authVerifyRes.body) == true) {
@@ -124,7 +128,7 @@ class AuthService {
         http.Response response = await http
             .get(Uri.parse('$baseUrl/api/getUser'), headers: <String, String>{
           'Content-Type': 'application/json',
-          'x-auth-token': token!
+          'x-auth-token': token
         });
 
         if (context.mounted) {
@@ -138,7 +142,10 @@ class AuthService {
     } catch (e) {
       userProvider.setLoading(false);
       if (context.mounted) {
-        showSnackBar(context: context, text: e.toString());
+        key.currentState!.showSnackBar(
+          const SnackBar(content: Text('Somthing went wrong'))
+        );
+        
         userProvider.setLoading(false);
       }
     }
