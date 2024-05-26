@@ -1,4 +1,5 @@
 import 'package:amazon_clone/constants/globel_variables.dart';
+import 'package:amazon_clone/features/account/screen/account_screen.dart';
 import 'package:flutter/material.dart';
 
 class BottomBar extends StatefulWidget {
@@ -30,9 +31,17 @@ class _BottomBarState extends State<BottomBar> {
 
   }
 
+  List<Widget> _pages = [
+    Scaffold(),
+
+    AccountScreen(),
+    Scaffold()
+  ];
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      body:  _pages[_page],
       bottomNavigationBar: Theme(
         data: ThemeData(
           splashColor: Colors.transparent,
