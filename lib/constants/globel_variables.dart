@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 
 
 
-const baseUrl = 'https://be1b-2409-4073-2ebd-800c-3442-6bcb-233c-f14.ngrok-free.app';
+const baseUrl = 'https://d98d-2409-4073-4e13-d9ad-51d5-396b-688d-ad97.ngrok-free.app';
 
 class GlobalVariables {
   // COLORS
